@@ -2,14 +2,10 @@ package rootcg.lum.definitions;
 
 import java.util.Optional;
 
-public class ParameterDefinition {
+public final class ParameterDefinition {
 
     private final String type;
     private final String name;
-
-    public ParameterDefinition(String name) {
-        this(null, name);
-    }
 
     public ParameterDefinition(String type, String name) {
         this.type = type;

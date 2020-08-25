@@ -1,2 +1,2 @@
 # Lum
-Create UML diagrams never was that easy
+Creating UML diagrams has never been so easy
