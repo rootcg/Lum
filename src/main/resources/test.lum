@@ -1,0 +1,17 @@
+interface Driver
+  + void drive(Car car)
+
+class Person
+  - String name
+  - List<Car> cars
+  + String getName()
+  + List<Car> getCars()
+
+class Car
+  String name
+  String brand
+  + String getName()
+  + String getBrand()
+
+Person use Car
+Person implements Driver
