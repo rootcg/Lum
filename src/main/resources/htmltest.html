@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        body {
+            background-color: #191c23;
+        }
+
+        .obj {
+            display: inline-grid;
+            font-family: "Fira Code", serif;
+            background-color: #282C35;
+        }
+
+        .obj > * {
+            padding: 5px 10px;
+            border-top: 2px solid black;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+        }
+
+        .obj > *:last-child {
+            border-bottom: 2px solid black;
+        }
+
+        .obj .header {
+            /*background-color: red;*/
+        }
+
+        .obj .header .name {
+            color: #E5C07B;
+        }
+
+        .obj .header .type {
+            color: #C678DD;
+            font-weight: bold;
+        }
+
+        .obj .attribute-container {
+            display: grid;
+            grid-template-columns: auto auto;
+            /*background-color: blue;*/
+        }
+
+        .obj .attribute-container .name {
+            color: #D19A66;
+        }
+
+        .obj .attribute-container .type {
+            color: #E5C07B;
+        }
+
+        .obj .method-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            /*background-color: green;*/
+        }
+
+        .obj .method-container .name {
+            color: #61AFEF;
+        }
+
+        .obj .method-container .parameters-container {
+            color: #E5C07B;
+        }
+
+        .obj .method-container .parameters-container .parameter:first-child::before {
+            content: "(";
+            color: white;
+        }
+
+        .obj .method-container .parameters-container .parameter::after {
+            content: ",";
+            color: white;
+        }
+
+        .obj .method-container .parameters-container .parameter:last-child::after {
+            content: ")";
+            color: white;
+        }
+
+        .obj .method-container .type {
+            margin-left: 5px;
+            color: #E5C07B;
+        }
+    </style>
+</head>
+<body>
+<div class="diagram">
+    <div class="obj">
+        <div class="header">
+            <span class="type">class</span>
+            <span class="name">Person</span>
+        </div>
+        <div class="attribute-container">
+            <span class="name">name</span>
+            <span class="type">String</span>
+            <span class="name">age</span>
+            <span class="type">int</span>
+            <span class="name">cars</span>
+            <span class="type">List&ltCar&gt</span>
+            <span class="name">father</span>
+            <span class="type">Person</span>
+        </div>
+        <div class="method-container">
+            <span class="name">drive</span>
+            <span class="parameters-container">
+                <span class="parameter">Car</span>
+                <span class="parameter">Car</span>
+            </span>
+            <span class="type">void</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
