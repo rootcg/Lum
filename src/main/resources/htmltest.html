@@ -25,65 +25,56 @@
             border-bottom: 2px solid black;
         }
 
-        .obj .header {
-            /*background-color: red;*/
-        }
-
-        .obj .header .name {
+        .obj .type {
             color: #E5C07B;
         }
 
-        .obj .header .type {
+        .obj .name {
+            color: #D19A66;
+        }
+
+        .obj .reserved {
             color: #C678DD;
             font-weight: bold;
         }
 
         .obj .attribute-container {
             display: grid;
-            grid-template-columns: auto auto;
-            /*background-color: blue;*/
-        }
-
-        .obj .attribute-container .name {
-            color: #D19A66;
-        }
-
-        .obj .attribute-container .type {
-            color: #E5C07B;
+            grid-template-columns: fit-content(0%) auto;
+            grid-column-gap: 10px;
         }
 
         .obj .method-container {
             display: grid;
-            grid-template-columns: auto auto auto;
-            /*background-color: green;*/
+            grid-template-columns: auto auto;
         }
 
-        .obj .method-container .name {
+        .obj .method-container .method > .name {
             color: #61AFEF;
         }
 
-        .obj .method-container .parameters-container {
-            color: #E5C07B;
+        .obj .method-container .method .parameters-container {
+            display: inline-block;
+            margin-left: -6px;
         }
 
-        .obj .method-container .parameters-container .parameter:first-child::before {
+        .obj .method-container .method .parameters-container .parameter:first-child::before {
             content: "(";
             color: white;
         }
 
-        .obj .method-container .parameters-container .parameter::after {
+        .obj .method-container .method .parameters-container .parameter::after {
             content: ",";
             color: white;
         }
 
-        .obj .method-container .parameters-container .parameter:last-child::after {
+        .obj .method-container .method .parameters-container .parameter:last-child::after {
             content: ")";
             color: white;
         }
 
-        .obj .method-container .type {
+        .obj .method-container > .type {
             margin-left: 5px;
-            color: #E5C07B;
         }
     </style>
 </head>
@@ -91,26 +82,28 @@
 <div class="diagram">
     <div class="obj">
         <div class="header">
-            <span class="type">class</span>
-            <span class="name">Person</span>
+            <span class="reserved definition">class</span>
+            <span class="type">Person</span>
         </div>
         <div class="attribute-container">
             <span class="name">name</span>
             <span class="type">String</span>
             <span class="name">age</span>
-            <span class="type">int</span>
+            <span class="type reserved">int</span>
             <span class="name">cars</span>
             <span class="type">List&ltCar&gt</span>
             <span class="name">father</span>
             <span class="type">Person</span>
         </div>
         <div class="method-container">
-            <span class="name">drive</span>
-            <span class="parameters-container">
-                <span class="parameter">Car</span>
-                <span class="parameter">Car</span>
-            </span>
-            <span class="type">void</span>
+            <div class="method">
+                <span class="name">drive</span>
+                <div class="parameters-container">
+                    <span class="parameter"><span class="type">Car</span> <span class="name">car</span></span>
+                    <span class="parameter"><span class="type">Car</span> <span class="name">car</span></span>
+                </div>
+                <span class="type reserved">void</span>
+            </div>
         </div>
     </div>
 </div>
