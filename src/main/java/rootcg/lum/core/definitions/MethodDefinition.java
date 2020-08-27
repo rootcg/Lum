@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static rootcg.lum.util.Validations.Arguments.checkAnyNonNull;
+
 public class MethodDefinition {
 
     public static class Builder {
@@ -49,10 +51,16 @@ public class MethodDefinition {
     private final List<ParameterDefinition> parameters;
 
     private MethodDefinition(Builder builder) {
+        checkAnyNonNull("type or name should be specified", builder.type, builder.name);
+
         this.scope = builder.scope != null ? builder.scope : Scope.PUBLIC;
         this.type = Optional.ofNullable(builder.type);
         this.name = Optional.ofNullable(builder.name);
         this.parameters = builder.parameters != null ? builder.parameters : Collections.emptyList();
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Scope getScope() {

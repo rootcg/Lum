@@ -2,6 +2,8 @@ package rootcg.lum.core.definitions;
 
 import java.util.Optional;
 
+import static rootcg.lum.util.Validations.Arguments.checkAnyNonNull;
+
 public final class AttributeDefinition {
 
     public static class Builder {
@@ -40,6 +42,8 @@ public final class AttributeDefinition {
     private final Optional<String> name;
 
     private AttributeDefinition(Builder builder) {
+        checkAnyNonNull("type or name should be specified", builder.type, builder.name);
+
         this.scope = builder.scope != null ? builder.scope : Scope.PUBLIC;
         this.type = Optional.ofNullable(builder.type);
         this.name = Optional.ofNullable(builder.name);
