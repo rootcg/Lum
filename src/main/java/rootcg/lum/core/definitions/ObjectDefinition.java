@@ -57,6 +57,10 @@ public class ObjectDefinition {
         this.methods = builder.methods != null ? builder.methods : Collections.emptyList();
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public Optional<String> getDefinition() {
         return definition;
     }
