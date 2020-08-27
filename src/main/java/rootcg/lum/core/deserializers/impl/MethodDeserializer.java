@@ -32,13 +32,12 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
             throw new ParseException(expression);
 
         MethodDefinition.Builder methodBuilder = MethodDefinition.builder();
-        if (!methodMatcher.group(1).isBlank() && !methodMatcher.group(2).isBlank()) {
+        if (!methodMatcher.group(1).isBlank() && !methodMatcher.group(2).isBlank())
             methodBuilder = methodBuilder.withType(methodMatcher.group(1)).withName(methodMatcher.group(2));
-        } else if (!methodMatcher.group(1).isBlank()) {
+        else if (!methodMatcher.group(1).isBlank())
             methodBuilder = methodBuilder.withName(methodMatcher.group(1));
-        } else {
+        else
             throw new ParseException(expression);
-        }
 
         List<String> parameters =
                 parameterSplitter.splitAsStream(methodMatcher.group(3))
@@ -47,9 +46,8 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
                                  .collect(Collectors.toList());
 
         List<ParameterDefinition> parameterDefinitions = new ArrayList<>();
-        for (String parameter : parameters) {
+        for (String parameter : parameters)
             parameterDefinitions.add(createParameter(parameter));
-        }
 
         methodBuilder.withParameters(parameterDefinitions);
         return methodBuilder.build();
@@ -59,13 +57,12 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
         String[] expression = expressionSplitter.split(source);
         ParameterDefinition.Builder parameterBuilder = ParameterDefinition.builder();
 
-        if (expression.length == 1) {
+        if (expression.length == 1)
             parameterBuilder = parameterBuilder.withName(expression[0]);
-        } else if (expression.length == 2) {
+        else if (expression.length == 2)
             parameterBuilder = parameterBuilder.withType(expression[0]).withName(expression[1]);
-        } else {
+        else
             throw new ParseException(source);
-        }
 
         return parameterBuilder.build();
     }
