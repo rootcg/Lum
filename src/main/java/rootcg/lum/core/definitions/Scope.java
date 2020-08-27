@@ -1,4 +1,4 @@
-package rootcg.lum.definitions;
+package rootcg.lum.core.definitions;
 
 public enum Scope {
 
