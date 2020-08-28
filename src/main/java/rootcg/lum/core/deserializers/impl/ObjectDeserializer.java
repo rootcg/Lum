@@ -27,7 +27,7 @@ public class ObjectDeserializer implements Deserializer<ObjectDefinition> {
                 && block.stream()
                         .skip(1)
                         .map(expression -> deserializers.stream().anyMatch(deserializer -> deserializer.accept(List.of(expression))))
-                        .reduce(Boolean::logicalOr)
+                        .reduce(Boolean::logicalAnd)
                         .orElse(false);
     }
 
