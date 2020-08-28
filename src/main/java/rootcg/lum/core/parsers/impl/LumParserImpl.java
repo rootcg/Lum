@@ -3,11 +3,10 @@ package rootcg.lum.core.parsers.impl;
 import rootcg.lum.core.definitions.DiagramDefinition;
 import rootcg.lum.core.definitions.ObjectDefinition;
 import rootcg.lum.core.definitions.RelationDefinition;
-import rootcg.lum.core.deserializers.Deserializer;
 import rootcg.lum.core.deserializers.exceptions.DeserializationException;
 import rootcg.lum.core.deserializers.exceptions.ParseException;
 import rootcg.lum.core.deserializers.impl.ObjectDeserializer;
-import rootcg.lum.core.deserializers.impl.RelationDeserializer;
+import rootcg.lum.core.deserializers.impl.RelationBlockDeserializer;
 import rootcg.lum.core.parsers.LumParser;
 
 import java.io.IOException;
@@ -24,7 +23,8 @@ import static java.util.stream.Collectors.toList;
 
 public class LumParserImpl implements LumParser {
 
-    private static final List<Deserializer<?>> deserializers = List.of(new RelationDeserializer(), new ObjectDeserializer());
+    private static final RelationBlockDeserializer relationBlockDeserializer = new RelationBlockDeserializer();
+    private static final ObjectDeserializer objectDeserializer = new ObjectDeserializer();
 
     @Override
     public DiagramDefinition parse(Path filePath) throws IOException, ParseException {
@@ -45,15 +45,13 @@ public class LumParserImpl implements LumParser {
 
         List<Object> components = new ArrayList<>();
         for (List<String> block : blocks) {
-            Deserializer<?> deserializer =
-                    deserializers.stream()
-                                 .filter(des -> des.accept(block))
-                                 .findFirst()
-                                 .orElseThrow(() -> new ParseException((lines.indexOf(block.get(0)) + 1),
-                                                                       " illegal expression " + block.get(0)));
-
             try {
-                components.add(deserializer.deserialize(block));
+                if (relationBlockDeserializer.accept(block))
+                    components.addAll(relationBlockDeserializer.deserialize(block));
+                else if (objectDeserializer.accept(block))
+                    components.add(objectDeserializer.deserialize(block));
+                else
+                    throw new ParseException((lines.indexOf(block.get(0)) + 1), " illegal expression starting with: " + block.get(0));
             } catch (DeserializationException e) {
                 throw new ParseException((lines.indexOf(block.get(0)) + 1), e.getMessage(), e);
             }
