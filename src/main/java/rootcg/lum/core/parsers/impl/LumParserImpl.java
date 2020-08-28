@@ -28,7 +28,7 @@ public class LumParserImpl implements LumParser {
 
     @Override
     public DiagramDefinition parse(Path filePath) throws IOException, ParseException {
-        var lines = Files.lines(filePath).collect(toList());
+        List<String> lines = Files.lines(filePath).collect(toList());
 
         int[] blankLinesIndexes =
                 Stream.of(IntStream.of(0),
