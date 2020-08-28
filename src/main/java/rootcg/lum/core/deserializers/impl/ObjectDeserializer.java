@@ -26,9 +26,7 @@ public class ObjectDeserializer implements Deserializer<ObjectDefinition> {
         return terms > 0 && terms <= 2
                 && block.stream()
                         .skip(1)
-                        .map(expression -> deserializers.stream().anyMatch(deserializer -> deserializer.accept(List.of(expression))))
-                        .reduce(Boolean::logicalAnd)
-                        .orElse(false);
+                        .allMatch(expression -> deserializers.stream().anyMatch(deserializer -> deserializer.accept(List.of(expression))));
     }
 
     @Override
