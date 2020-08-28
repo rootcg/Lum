@@ -1,4 +1,4 @@
-Person
+class Person
  name
  age
  getName()
@@ -7,6 +7,6 @@ Person
 Car
  String model
  String brand
- String getModel()
+ String getModel(Car a, Person a)
 
 Person use Car
