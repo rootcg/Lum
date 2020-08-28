@@ -2,10 +2,12 @@ package rootcg.lum.core.deserializers.impl;
 
 import rootcg.lum.core.definitions.AttributeDefinition;
 import rootcg.lum.core.deserializers.Deserializer;
-import rootcg.lum.core.deserializers.exceptions.ParseException;
+import rootcg.lum.core.deserializers.exceptions.DeserializationException;
 
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static java.util.function.Predicate.not;
 
 public class AttributeDeserializer implements Deserializer<AttributeDefinition> {
 
@@ -14,18 +16,16 @@ public class AttributeDeserializer implements Deserializer<AttributeDefinition> 
 
     @Override
     public boolean accept(List<String> block) {
-        if (block.size() != 1 || block.get(0).startsWith(EXPRESSION_SEPARATOR))
+        if (block.size() != 1 || !block.get(0).startsWith(EXPRESSION_SEPARATOR))
             return false;
 
-        long terms = expressionSplitter.splitAsStream(block.get(0)).count();
+        int terms = normalize(block.get(0)).length;
         return terms > 0 && terms <= 2;
     }
 
     @Override
-    public AttributeDefinition deserialize(List<String> block) throws ParseException {
-        String[] expression = expressionSplitter.splitAsStream(block.get(0))
-                                                .map(String::strip)
-                                                .toArray(String[]::new);
+    public AttributeDefinition deserialize(List<String> block) throws DeserializationException {
+        String[] expression = normalize(block.get(0));
 
         AttributeDefinition.Builder attributeBuilder = AttributeDefinition.builder();
         if (expression.length == 1)
@@ -33,9 +33,13 @@ public class AttributeDeserializer implements Deserializer<AttributeDefinition> 
         else if (expression.length == 2)
             attributeBuilder = attributeBuilder.withType(expression[0]).withName(expression[1]);
         else
-            throw new ParseException(block.get(0));
+            throw new DeserializationException(block.get(0));
 
         return attributeBuilder.build();
+    }
+
+    private String[] normalize(String source) {
+        return expressionSplitter.splitAsStream(source).map(String::strip).filter(not(String::isEmpty)).toArray(String[]::new);
     }
 
 }

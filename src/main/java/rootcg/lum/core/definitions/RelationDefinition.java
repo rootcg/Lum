@@ -2,7 +2,7 @@ package rootcg.lum.core.definitions;
 
 import static rootcg.lum.util.Validations.Arguments.checkNonNull;
 
-public class Relation {
+public class RelationDefinition {
 
     public static class Builder {
 
@@ -29,8 +29,8 @@ public class Relation {
             return this;
         }
 
-        public Relation build() {
-            return new Relation(this);
+        public RelationDefinition build() {
+            return new RelationDefinition(this);
         }
 
     }
@@ -39,7 +39,7 @@ public class Relation {
     private final String target;
     private final RelationType type;
 
-    private Relation(Builder builder) {
+    private RelationDefinition(Builder builder) {
         this.source = checkNonNull(builder.source);
         this.target = checkNonNull(builder.target);
         this.type = checkNonNull(builder.type);

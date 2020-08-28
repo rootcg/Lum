@@ -3,7 +3,7 @@ package rootcg.lum.core.deserializers.impl;
 import rootcg.lum.core.definitions.MethodDefinition;
 import rootcg.lum.core.definitions.ParameterDefinition;
 import rootcg.lum.core.deserializers.Deserializer;
-import rootcg.lum.core.deserializers.exceptions.ParseException;
+import rootcg.lum.core.deserializers.exceptions.DeserializationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,16 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
 
     @Override
     public boolean accept(List<String> block) {
-        return block.size() == 1 && pattern.matcher(block.get(0)).matches();
+        return block.size() == 1 && pattern.matcher(normalize(block.get(0))).matches();
     }
 
     @Override
-    public MethodDefinition deserialize(List<String> block) throws ParseException {
-        String expression = block.get(0).strip();
+    public MethodDefinition deserialize(List<String> block) throws DeserializationException {
+        String expression = normalize(block.get(0));
 
         Matcher methodMatcher = pattern.matcher(expression);
         if (!methodMatcher.matches())
-            throw new ParseException(expression);
+            throw new DeserializationException(expression);
 
         MethodDefinition.Builder methodBuilder = MethodDefinition.builder();
         if (!methodMatcher.group(1).isBlank() && !methodMatcher.group(2).isBlank())
@@ -37,7 +37,7 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
         else if (!methodMatcher.group(1).isBlank())
             methodBuilder = methodBuilder.withName(methodMatcher.group(1));
         else
-            throw new ParseException(expression);
+            throw new DeserializationException(expression);
 
         List<String> parameters =
                 parameterSplitter.splitAsStream(methodMatcher.group(3))
@@ -53,7 +53,11 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
         return methodBuilder.build();
     }
 
-    private static ParameterDefinition createParameter(String source) throws ParseException {
+    private String normalize(String source) {
+        return source.strip();
+    }
+
+    private static ParameterDefinition createParameter(String source) throws DeserializationException {
         String[] expression = expressionSplitter.split(source);
         ParameterDefinition.Builder parameterBuilder = ParameterDefinition.builder();
 
@@ -62,7 +66,7 @@ public class MethodDeserializer implements Deserializer<MethodDefinition> {
         else if (expression.length == 2)
             parameterBuilder = parameterBuilder.withType(expression[0]).withName(expression[1]);
         else
-            throw new ParseException(source);
+            throw new DeserializationException(source);
 
         return parameterBuilder.build();
     }

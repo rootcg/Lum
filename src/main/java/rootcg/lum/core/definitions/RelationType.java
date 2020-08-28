@@ -1,5 +1,8 @@
 package rootcg.lum.core.definitions;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum RelationType {
 
     USE("use"), IMPLEMENTS("implements");
@@ -12,6 +15,10 @@ public enum RelationType {
 
     public String getRepresentation() {
         return representation;
+    }
+
+    public static Optional<RelationType> from(String representation) {
+        return Arrays.stream(RelationType.values()).filter(type -> type.representation.equals(representation)).findFirst();
     }
 
 }
