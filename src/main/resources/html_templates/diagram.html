@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lum Diagram</title>
+    <style>
+        body {
+            background-color: #191c23;
+        }
+
+        .diagram {
+
+        }
+
+        .obj {
+            display: inline-grid;
+            font-family: "Fira Code", serif;
+            background-color: #282C35;
+            margin: 10px;
+        }
+
+        .obj > * {
+            padding: 5px 10px;
+            border-top: 2px solid black;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+        }
+
+        .obj > *:last-child {
+            border-bottom: 2px solid black;
+        }
+
+        .obj .type {
+            color: #E5C07B;
+        }
+
+        .obj .name {
+            color: #D19A66;
+        }
+
+        .obj .reserved {
+            color: #C678DD;
+            font-weight: bold;
+        }
+
+        .obj .attribute-container {
+            display: grid;
+            grid-template-columns: fit-content(0%) auto;
+            grid-column-gap: 10px;
+        }
+
+        .obj .method-container {
+            display: inline-grid;
+        }
+
+        .obj .method-container .method > .name {
+            color: #61AFEF;
+        }
+
+        .obj .method-container .method .parameters-container {
+            display: inline-block;
+            margin-left: -6px;
+        }
+
+        .obj .method-container .method .parameters-container .parameter:first-child::before {
+            content: "(";
+            color: white;
+        }
+
+        .obj .method-container .method .parameters-container .parameter::after {
+            content: ",";
+            color: white;
+        }
+
+        .obj .method-container .method .parameters-container .parameter:last-child::after {
+            content: ")";
+            color: white;
+        }
+
+        .obj .method-container > .type {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="diagram">
+    !lum-objects
+</div>
+</body>
+</html>

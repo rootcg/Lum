@@ -2,7 +2,11 @@ package rootcg.lum.core.definitions;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.function.Predicate.not;
 
 public class DiagramDefinition {
 
@@ -10,11 +14,12 @@ public class DiagramDefinition {
     private final List<RelationDefinition> relations;
 
     public DiagramDefinition(List<ObjectDefinition> objects, List<RelationDefinition> relations) {
+        Set<String> names = objects.stream().map(ObjectDefinition::getName).collect(Collectors.toSet());
         Optional<String> invalidRef =
-                Stream.concat(relations.stream().map(RelationDefinition::getSource), relations.stream().map(RelationDefinition::getTarget))
-                      .distinct()
-                      .filter(objectRef -> objects.stream().map(ObjectDefinition::getName).noneMatch(objectRef::equals))
-                      .findFirst();
+                relations.stream()
+                         .flatMap(relation -> Stream.of(relation.getTarget(), relation.getSource()))
+                         .filter(not(names::contains))
+                         .findFirst();
 
         if (invalidRef.isPresent())
             throw new IllegalArgumentException("Illegal reference to an object: " + invalidRef.get());

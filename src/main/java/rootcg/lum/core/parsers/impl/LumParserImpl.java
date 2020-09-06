@@ -41,6 +41,7 @@ public class LumParserImpl implements LumParser {
                 IntStream.range(0, blankLinesIndexes.length - 1)
                          .mapToObj(i -> lines.subList(blankLinesIndexes[i], blankLinesIndexes[i + 1]))
                          .map(block -> block.stream().filter(not(String::isBlank)).collect(toList()))
+                         .filter(not(List::isEmpty))
                          .collect(toList());
 
         List<Object> components = new ArrayList<>();

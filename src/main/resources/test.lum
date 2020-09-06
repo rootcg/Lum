@@ -1,12 +1,11 @@
-class Person
- name
- age
- getName()
- getAge()
+class Tree
+ Text color
+ grow()
 
-Car
- String model
- String brand
- String getModel(Car a, Person a)
+class Lumberjack
+ Text name
+ Tool tool
+ cutTreeDown()
 
-Person use Car
+
+Lumberjack use Tree
