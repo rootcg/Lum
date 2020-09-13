@@ -19,7 +19,7 @@ public class TopToBottom extends GridLayout {
         super(rows, columns);
     }
 
-    public static void of(DiagramDefinition diagramDefinition) {
+    public static TopToBottom of(DiagramDefinition diagramDefinition) {
         var incomingRelations = diagramDefinition.getIncomingRelations();
         List<List<ObjectDefinition>> levels =
                 diagramDefinition.getObjects().stream().collect(groupingBy(obj -> incomingRelations.get(obj.getName()).size()))
@@ -29,7 +29,7 @@ public class TopToBottom extends GridLayout {
         // Create grid
         int rows = Math.max(levels.size(), 1);
         int columns = levels.stream().mapToInt(List::size).max().orElse(1);
-        GridLayout layout = new TopToBottom(rows, columns);
+        TopToBottom layout = new TopToBottom(rows, columns);
 
         // Put objects
         for (int i = 0; i < levels.size(); i++) {
@@ -61,6 +61,9 @@ public class TopToBottom extends GridLayout {
                 relations.stream().filter(previousLevel::contains).forEach(relatedObj -> layout.moveOnTop(obj, relatedObj));
             });
         });
+
+        layout.addGap();
+        return layout;
     }
 
 }

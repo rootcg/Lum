@@ -3,8 +3,8 @@ package rootcg.lum.representation.layouts;
 import rootcg.lum.core.definitions.ObjectDefinition;
 
 import java.util.*;
-
-import static rootcg.lum.util.Validations.Arguments.check;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class GridLayout implements Layout {
 
@@ -23,8 +23,7 @@ public class GridLayout implements Layout {
             return locked;
         }
 
-        protected abstract char[][] print();
-
+        public abstract char[][] print();
     }
 
     public static class ObjectCell extends GridCell {
@@ -94,13 +93,13 @@ public class GridLayout implements Layout {
         }
     }
 
-    private static final int CELL_SIZE = 5;
+    public static final int CELL_SIZE = 5;
 
     private final Map<String, Point> points;
-    private final GridCell[][] grid;
-
     private final int rows;
     private final int columns;
+
+    private GridCell[][] grid;
 
     public GridLayout(int rows, int columns) {
         this.points = new HashMap<>();
@@ -109,6 +108,26 @@ public class GridLayout implements Layout {
         this.columns = columns;
 
         Arrays.stream(grid).forEach(line -> Arrays.fill(line, new EmptyCell()));
+    }
+
+    public GridLayout addGap() {
+        GridCell[][] newGrid = new GridCell[rows * 2 + 1][columns * 2 + 1];
+
+        AtomicInteger rowCount = new AtomicInteger(0);
+        for (GridCell[] gridCells : grid) {
+            Arrays.fill(newGrid[rowCount.getAndIncrement()], new EmptyCell());
+            int newRow = rowCount.getAndIncrement();
+            AtomicInteger columnsCount = new AtomicInteger(0);
+            for (GridCell gridCell : gridCells) {
+                newGrid[newRow][columnsCount.getAndIncrement()] = new EmptyCell();
+                newGrid[newRow][columnsCount.getAndIncrement()] = gridCell;
+            }
+            newGrid[newRow][columnsCount.getAndIncrement()] = new EmptyCell();
+        }
+        Arrays.fill(newGrid[rowCount.getAndIncrement()], new EmptyCell());
+
+        this.grid = newGrid;
+        return this;
     }
 
     public GridLayout putObject(Point point, ObjectDefinition content) {
@@ -136,37 +155,35 @@ public class GridLayout implements Layout {
         return this;
     }
 
-    public GridLayout moveOnTop(String bottom, String top) {
-        check(points::containsKey, bottom);
-        check(points::containsKey, top);
+    public void moveOnTop(String bottom, String top) {
+        if (!points.containsKey(bottom) || !points.containsKey(top))
+            return;
 
         Point bottomPoint = points.get(bottom);
         Point topPoint = points.get(top);
 
         if (topPoint.x == bottomPoint.x) {
             grid[topPoint.y][topPoint.x].lock();
-            return this;
+            return;
         }
 
         int row = bottomPoint.y - 1;
-        for (int i = 0; i < columns; i++) {
-            if (!grid[row][i].locked) {
-                GridCell aux = grid[row][i];
-                grid[row][i] = grid[topPoint.y][topPoint.x];
-                grid[topPoint.y][topPoint.x] = aux;
-                points.put(top, new Point(i, row));
+        IntStream.range(0, columns)
+                 .filter(i -> !grid[row][i].locked)
+                 .findFirst()
+                 .ifPresent(i -> {
+                     GridCell aux = grid[row][i];
+                     grid[row][i] = grid[topPoint.y][topPoint.x];
+                     grid[topPoint.y][topPoint.x] = aux;
+                     points.put(top, new Point(i, row));
 
-                if (aux instanceof ObjectCell) {
-                    ObjectCell objCell = (ObjectCell) aux;
-                    points.put(objCell.content.getName(), topPoint);
-                }
+                     if (aux instanceof ObjectCell) {
+                         ObjectCell objCell = (ObjectCell) aux;
+                         points.put(objCell.content.getName(), topPoint);
+                     }
 
-                grid[row][i].lock();
-                break;
-            }
-        }
-
-        return this;
+                     grid[row][i].lock();
+                 });
     }
 
     public Point getPoint(String point) {
