@@ -110,7 +110,7 @@ public class GridLayout implements Layout {
         Arrays.stream(grid).forEach(line -> Arrays.fill(line, new EmptyCell()));
     }
 
-    public GridLayout addGap() {
+    public void addGap() {
         GridCell[][] newGrid = new GridCell[rows * 2 + 1][columns * 2 + 1];
 
         AtomicInteger rowCount = new AtomicInteger(0);
@@ -127,19 +127,17 @@ public class GridLayout implements Layout {
         Arrays.fill(newGrid[rowCount.getAndIncrement()], new EmptyCell());
 
         this.grid = newGrid;
-        return this;
     }
 
-    public GridLayout putObject(Point point, ObjectDefinition content) {
+    public void putObject(Point point, ObjectDefinition content) {
         grid[point.y][point.x] = new ObjectCell(content);
         points.put(content.getName(), point);
-        return this;
     }
 
-    public GridLayout interchange(String obj, Point point) {
+    public void interchange(String obj, Point point) {
         Point oldPoint = points.get(obj);
         if (oldPoint.equals(point)) {
-            return this;
+            return;
         }
 
         GridCell aux = grid[point.y][point.x];
@@ -151,8 +149,6 @@ public class GridLayout implements Layout {
             ObjectCell objCell = (ObjectCell) aux;
             points.put(objCell.content.getName(), oldPoint);
         }
-
-        return this;
     }
 
     public void moveOnTop(String bottom, String top) {
