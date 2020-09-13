@@ -2,47 +2,27 @@ package rootcg.lum.representation.layouts;
 
 import rootcg.lum.core.definitions.DiagramDefinition;
 import rootcg.lum.core.definitions.ObjectDefinition;
-import rootcg.lum.core.definitions.RelationDefinition;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class TopToBottom {
 
     private static final int CELL_SIZE = 5;
 
     public static void create(DiagramDefinition diagramDefinition) {
-        var outgoingRelations =
-                diagramDefinition.getRelations().stream()
-                                 .collect(groupingBy(RelationDefinition::getSource, mapping(RelationDefinition::getTarget, toList())));
-        var incomingRelations =
-                diagramDefinition.getRelations().stream()
-                                 .collect(groupingBy(RelationDefinition::getTarget, mapping(RelationDefinition::getSource, toList())));
-
-        // Fill relation lists with remaining objects
-        diagramDefinition.getObjects().stream().map(ObjectDefinition::getName).forEach(key -> {
-            outgoingRelations.putIfAbsent(key, emptyList());
-            incomingRelations.putIfAbsent(key, emptyList());
-        });
-
-        var relationPaths =
-                diagramDefinition.getObjects().stream().map(ObjectDefinition::getName)
-                                 .collect(toMap(identity(), name -> getRelationPaths(name, outgoingRelations)));
-
-        relationPaths.forEach((k, v) -> {
+        diagramDefinition.getRelationPaths().forEach((k, v) -> {
             System.out.println(k + ": ");
             v.forEach(path -> System.out.println(">> " + String.join(" -> ", path.toArray(new String[]{}))));
             System.out.println();
         });
 
+        var incomingRelations = diagramDefinition.getIncomingRelations();
         List<List<ObjectDefinition>> levels =
                 diagramDefinition.getObjects().stream().collect(groupingBy(obj -> incomingRelations.get(obj.getName()).size()))
                                  .entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).map(Map.Entry::getValue)
@@ -85,20 +65,6 @@ public class TopToBottom {
         });
 
         print(layout);
-    }
-
-    private static List<List<String>> getRelationPaths(String entity, Map<String, List<String>> allRelations) {
-        List<String> relations = allRelations.get(entity);
-        if (relations.isEmpty()) {
-            return singletonList(singletonList(entity));
-        }
-
-        return relations.stream()
-                        .map(relation -> getRelationPaths(relation, allRelations))
-                        .map(paths -> paths.stream()
-                                           .flatMap(path -> Stream.concat(Stream.of(entity), path.stream()))
-                                           .collect(toList()))
-                        .collect(toList());
     }
 
     private static void print(GridLayout layout) {
