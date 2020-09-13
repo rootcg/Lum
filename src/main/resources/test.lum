@@ -1,11 +1,42 @@
-class Tree
- Text color
- grow()
+interface Figure
+    int area()
+    int perimeter()
 
-class Lumberjack
- Text name
- Tool tool
- cutTreeDown()
+class Square
+    int size
 
+class Rectangle
+    int base
+    int height
 
-Lumberjack use Tree
+class Circle
+    int radius
+
+interface 3DFigure
+    int volume
+
+class Sphere
+    int radius
+
+class Cake
+    String flavour
+
+3DFigure extends Figure
+Sphere implements 3DFigure
+Square implements Figure
+Rectangle implements Figure
+Circle implements Figure
+Cake extends Circle
+Cake implements 3DFigure
+
+class Vehicle
+    String number
+
+class Car
+    String model
+
+class Truck
+    int load
+
+Car extends Vehicle
+Truck extends Vehicle

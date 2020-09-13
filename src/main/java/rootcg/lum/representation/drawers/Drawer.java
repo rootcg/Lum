@@ -1,4 +1,4 @@
-package rootcg.lum.drawers;
+package rootcg.lum.representation.drawers;
 
 import rootcg.lum.core.definitions.DiagramDefinition;
 

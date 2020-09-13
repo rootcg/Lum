@@ -1,8 +1,8 @@
-package rootcg.lum.drawers.impl;
+package rootcg.lum.representation.drawers.impl;
 
 import rootcg.lum.core.definitions.DiagramDefinition;
 import rootcg.lum.core.definitions.ObjectDefinition;
-import rootcg.lum.drawers.Drawer;
+import rootcg.lum.representation.drawers.Drawer;
 
 import java.io.IOException;
 import java.net.URL;

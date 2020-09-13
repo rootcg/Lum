@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public enum RelationType {
 
-    USE("use"), IMPLEMENTS("implements");
+    USE("use"), IMPLEMENTS("implements"), EXTENDS("extends");
 
     String representation;
 
