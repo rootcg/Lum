@@ -21,6 +21,8 @@ public class TopToBottom extends GridLayout {
 
     public static TopToBottom of(DiagramDefinition diagramDefinition) {
         var incomingRelations = diagramDefinition.getIncomingRelations();
+
+        // Define grid levels
         List<List<ObjectDefinition>> levels =
                 diagramDefinition.getObjects().stream().collect(groupingBy(obj -> incomingRelations.get(obj.getName()).size()))
                                  .entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).map(Map.Entry::getValue)
@@ -38,7 +40,7 @@ public class TopToBottom extends GridLayout {
             }
         }
 
-        // Organize
+        // Align objects by its relations
         IntStream.iterate(levels.size() - 1, n -> n > 0, n -> n - 1).forEach(n -> {
             List<String> level = levels.get(n).stream().map(ObjectDefinition::getName).collect(toList());
             List<String> previousLevel = levels.get(n - 1).stream().map(ObjectDefinition::getName).collect(toList());
@@ -62,7 +64,9 @@ public class TopToBottom extends GridLayout {
             });
         });
 
+        // Add gaps between the objects so there is space for the relations
         layout.addGap();
+
         return layout;
     }
 
