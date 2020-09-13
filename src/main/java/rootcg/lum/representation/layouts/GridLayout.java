@@ -23,7 +23,7 @@ public class GridLayout implements Layout {
             return locked;
         }
 
-        public abstract char[][] print();
+        public abstract String[][] print();
     }
 
     public static class ObjectCell extends GridCell {
@@ -39,18 +39,27 @@ public class GridLayout implements Layout {
         }
 
         @Override
-        public char[][] print() {
-            char[][] arr = new char[CELL_SIZE][CELL_SIZE];
-            Arrays.stream(arr).forEach(line -> Arrays.fill(line, content.getName().charAt(0)));
+        public String[][] print() {
+            String[][] arr = new String[CELL_SIZE][CELL_SIZE];
+
+            char[] nameChars = content.getName().toCharArray();
+            for (int i = 0; i < arr[0].length; i++) {
+                if(i < nameChars.length)
+                    arr[0][i] = String.valueOf(nameChars[i]);
+                else
+                    arr[0][i] = " ";
+            }
+
+            Arrays.stream(arr).skip(1).forEach(line -> Arrays.fill(line, String.valueOf(content.getName().charAt(0))));
             return arr;
         }
     }
 
     public static class EmptyCell extends GridCell {
         @Override
-        public char[][] print() {
-            char[][] content = new char[CELL_SIZE][CELL_SIZE];
-            Arrays.stream(content).forEach(line -> Arrays.fill(line, '+'));
+        public String[][] print() {
+            String[][] content = new String[CELL_SIZE][CELL_SIZE];
+            Arrays.stream(content).forEach(line -> Arrays.fill(line, " "));
             return content;
         }
     }
