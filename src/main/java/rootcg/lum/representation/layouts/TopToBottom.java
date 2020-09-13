@@ -11,17 +11,15 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
-public class TopToBottom {
+public class TopToBottom extends GridLayout {
 
     private static final int CELL_SIZE = 5;
 
-    public static void create(DiagramDefinition diagramDefinition) {
-        diagramDefinition.getRelationPaths().forEach((k, v) -> {
-            System.out.println(k + ": ");
-            v.forEach(path -> System.out.println(">> " + String.join(" -> ", path.toArray(new String[]{}))));
-            System.out.println();
-        });
+    private TopToBottom(int rows, int columns) {
+        super(rows, columns);
+    }
 
+    public static void of(DiagramDefinition diagramDefinition) {
         var incomingRelations = diagramDefinition.getIncomingRelations();
         List<List<ObjectDefinition>> levels =
                 diagramDefinition.getObjects().stream().collect(groupingBy(obj -> incomingRelations.get(obj.getName()).size()))
@@ -31,7 +29,7 @@ public class TopToBottom {
         // Create grid
         int rows = Math.max(levels.size(), 1);
         int columns = levels.stream().mapToInt(List::size).max().orElse(1);
-        GridLayout layout = new GridLayout(rows, columns);
+        GridLayout layout = new TopToBottom(rows, columns);
 
         // Put objects
         for (int i = 0; i < levels.size(); i++) {
@@ -63,24 +61,6 @@ public class TopToBottom {
                 relations.stream().filter(previousLevel::contains).forEach(relatedObj -> layout.moveOnTop(obj, relatedObj));
             });
         });
-
-        print(layout);
-    }
-
-    private static void print(GridLayout layout) {
-        GridLayout.GridCell[][] grid = layout.getGrid();
-
-        for (int i = 0; i < grid.length; i++) {
-            for (int i2 = 0; i2 < CELL_SIZE; i2++) {
-                for (int j = 0; j < grid[i].length; j++) {
-                    char[][] chars = grid[i][j].print();
-                    for (int j2 = 0; j2 < CELL_SIZE; j2++) {
-                        System.out.print(chars[i2][j2] + " ");
-                    }
-                }
-                System.out.println();
-            }
-        }
     }
 
 }

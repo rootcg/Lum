@@ -6,7 +6,7 @@ import java.util.*;
 
 import static rootcg.lum.util.Validations.Arguments.check;
 
-public class GridLayout {
+public class GridLayout implements Layout {
 
     public static abstract class GridCell {
         private boolean locked;
@@ -119,7 +119,7 @@ public class GridLayout {
 
     public GridLayout interchange(String obj, Point point) {
         Point oldPoint = points.get(obj);
-        if(oldPoint.equals(point)) {
+        if (oldPoint.equals(point)) {
             return this;
         }
 
@@ -128,7 +128,7 @@ public class GridLayout {
         grid[oldPoint.y][oldPoint.x] = aux;
         points.put(obj, point);
 
-        if(aux instanceof ObjectCell) {
+        if (aux instanceof ObjectCell) {
             ObjectCell objCell = (ObjectCell) aux;
             points.put(objCell.content.getName(), oldPoint);
         }
@@ -143,20 +143,20 @@ public class GridLayout {
         Point bottomPoint = points.get(bottom);
         Point topPoint = points.get(top);
 
-        if(topPoint.x == bottomPoint.x) {
+        if (topPoint.x == bottomPoint.x) {
             grid[topPoint.y][topPoint.x].lock();
             return this;
         }
 
         int row = bottomPoint.y - 1;
         for (int i = 0; i < columns; i++) {
-            if(!grid[row][i].locked) {
+            if (!grid[row][i].locked) {
                 GridCell aux = grid[row][i];
                 grid[row][i] = grid[topPoint.y][topPoint.x];
                 grid[topPoint.y][topPoint.x] = aux;
                 points.put(top, new Point(i, row));
 
-                if(aux instanceof ObjectCell) {
+                if (aux instanceof ObjectCell) {
                     ObjectCell objCell = (ObjectCell) aux;
                     points.put(objCell.content.getName(), topPoint);
                 }
@@ -176,7 +176,7 @@ public class GridLayout {
     public Optional<ObjectDefinition> getObject(Point point) {
         GridCell cell = grid[point.y][point.x];
 
-        if(cell instanceof ObjectCell) {
+        if (cell instanceof ObjectCell) {
             return Optional.of(((ObjectCell) cell).content);
         } else {
             return Optional.empty();

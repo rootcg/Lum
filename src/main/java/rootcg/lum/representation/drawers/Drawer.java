@@ -1,9 +1,9 @@
 package rootcg.lum.representation.drawers;
 
-import rootcg.lum.core.definitions.DiagramDefinition;
+import rootcg.lum.representation.layouts.Layout;
 
-public interface Drawer {
+public interface Drawer<T extends Layout> {
 
-    void draw(DiagramDefinition diagramDefinition);
+    void draw(T layout);
 
 }
