@@ -15,7 +15,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-public class TopToBotton {
+public class TopToBottom {
 
     private static final int CELL_SIZE = 5;
 
